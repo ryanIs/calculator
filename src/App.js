@@ -5,7 +5,7 @@
 
 	- Make the ODD child elements green.
 
-	- Apply (decent) CSS to the children elements
+	- Apply (decent) CSS to the children elements.
 */
 import React, { Component } from 'react';
 import logo from './logo.svg';
