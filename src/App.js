@@ -3,8 +3,6 @@
 
 	- Set height of each grid item.
 
-	- Make the ODD child elements green.
-
 	- Apply (decent) CSS to the children elements.
 */
 import React, { Component } from 'react';
@@ -16,6 +14,11 @@ class App extends Component {
 		return (
 			<div className="App">
 				<div className="wrapper">
+          <div className="header">
+            <h1 className="header-h1">
+              Calculator
+            </h1>
+          </div>
 					<div className="calculator">
 						<div className="calculator-output">
 							0
@@ -23,29 +26,28 @@ class App extends Component {
 
 						<div className="calculator-buttons">
 							<div className="calculator-button C-button">C</div>
-							<div className="calculator-button not-button">+/-</div>
-							<div className="calculator-button percent-button">%</div>
-							<div className="calculator-button divide-button">/</div>
+							<div className="calculator-button not-button funct-btn">+/-</div>
+							<div className="calculator-button percent-button funct-btn">%</div>
+							<div className="calculator-button divide-button funct-btn">/</div>
 
-							<div className="calculator-button 7-button">7</div>
-							<div className="calculator-button 8-button">8</div>
-							<div className="calculator-button 9-button">9</div>
-							<div className="calculator-button multiply--button">X</div>
+							<div className="calculator-button seven-button number-btn">7</div>
+							<div className="calculator-button eight-button number-btn">8</div>
+							<div className="calculator-button nine-button number-btn">9</div>
+							<div className="calculator-button multiply-button funct-btn">X</div>
 
-							<div className="calculator-button 4-button">4</div>
-							<div className="calculator-button 5-button">5</div>
-							<div className="calculator-button 6-button">6</div>
-							<div className="calculator-button minus-button">-</div>
+							<div className="calculator-button four-button number-btn">4</div>
+							<div className="calculator-button five-button number-btn">5</div>
+							<div className="calculator-button six-button number-btn">6</div>
+							<div className="calculator-button minus-button funct-btn">-</div>
 
-							<div className="calculator-button 1-button">1</div>
-							<div className="calculator-button 2-button">2</div>
-							<div className="calculator-button 3-button">3</div>
-							<div className="calculator-button plus-button">+</div>
+							<div className="calculator-button one-button number-btn">1</div>
+							<div className="calculator-button two-button number-btn">2</div>
+							<div className="calculator-button three-button number-btn">3</div>
+							<div className="calculator-button plus-button funct-btn">+</div>
 
-							<div className="calculator-button 0-button">0</div>
-							<div className="calculator-button -button">0</div>
-							<div className="calculator-button point-button">.</div>
-							<div className="calculator-button equal-button">=</div>
+							<div className="calculator-button zero-button number-btn">0</div>
+							<div className="calculator-button point-button number-btn">.</div>
+							<div className="calculator-button equal-button funct-btn">=</div>
 						</div>
 					</div>
 				</div>

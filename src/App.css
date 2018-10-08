@@ -1,25 +1,78 @@
+.App {
+
+  font-family: "Arial";
+}
+
+h1 {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-family: "Times New Roman";
+}
+
 .calculator {
+  font-size: 25px;
 	width: 300px;
-	height: 500px;
-	border: 1px solid red;
-	margin: 0 auto;
+	height: auto; /* ~ 500px */
+	border: 4px outset #eee;
+  margin: 0 auto;
+  box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.2);
 }
 
 .calculator-output {
-	width: 300px;
-	height: 100px;
+	height: 70px;
+  padding: 10px;
+  padding-top: 30px;
+  font-size: 2em;
+  text-align: right;
+  overflow: auto;
+  background: #222;
+  color: white;
+  border-bottom: 3px solid gray;
+  box-shadow: inset 5px 5px 10px 10px rgba(0,0,0,0.5);
 }
 
 .calculator-buttons {
 	display: grid;
-	grid-template-columns: repeat(4, 25%);
-	grid-template-rows: repeat(5, 20%);
+  grid-template-rows: repeat(5, 20%);
+  grid-template-columns: repeat(4, 25%);
 }
 
-.calculator-buttons:nth-child(even) {
-	background: red;
+.calculator-button {
+  height: 50px;
+  border: 1px solid #808080;
+  text-align: center;
+  padding-top: 20px;
+  user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  box-shadow: inset 5px 5px 11px 5px rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: opacity 0.3s;
 }
 
-.calculator-buttons:nth-child(odd) {
-	background: green;
+.calculator-button:hover {
+  opacity: 0.8;
+}
+
+.calculator-button:active {
+  opacity: 0.5;
+}
+
+.zero-button {
+  grid-column-start: span 2;
+}
+
+.C-button {
+  background: #eee;
+}
+
+.number-btn {
+  background: #ccc;
+}
+
+.funct-btn {
+  background: #9f9;
 }
