@@ -1,5 +1,4 @@
 .App {
-
   font-family: "Arial";
 }
 
@@ -12,15 +11,15 @@ h1 {
 
 .calculator {
   font-size: 25px;
-	width: 300px;
-	height: auto; /* ~ 500px */
-	border: 4px outset #eee;
+  width: 300px;
+  height: auto; /* ~ 500px */
+  border: 4px outset #eee;
   margin: 0 auto;
   box-shadow: 2px 2px 5px 1px rgba(0,0,0,0.2);
 }
 
 .calculator-output {
-	height: 70px;
+  height: 70px;
   padding: 10px;
   padding-top: 30px;
   font-size: 2em;
@@ -33,7 +32,7 @@ h1 {
 }
 
 .calculator-buttons {
-	display: grid;
+  display: grid;
   grid-template-rows: repeat(5, 20%);
   grid-template-columns: repeat(4, 25%);
 }
