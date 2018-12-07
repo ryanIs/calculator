@@ -1,36 +1,117 @@
-/*
-	TODO:
-
-	- Implement commas into system and checking
-
-	- Detect for MAX CHARACTERS (without commas)
-
-	- Add dynaic CSS for when characters exceed 10 (no scrollbar should appear in output)
-
-	- Test and add final touch-up to CSS.
-*/
+/**
+ * App.js
+ * 
+ * Created by Ryan Isler
+ * This project was bootstrapped with create-react-app
+ */
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
 
+	/**
+	 * Handles App init.
+	 * @param {object} props - object props
+	 */
 	constructor(props) {
+
+		// Call parent class constructor
 		super(props);
 
-		this.MAX_OUTPUT_LENGTH = 16;
+		// Maximum output length
+		this.MAX_OUTPUT_LENGTH = 20;
 
+		// Resize text after these number of characters
+		this.RESIZE_OUTPUT_LENGTH = 10;
+
+		// Style of smaller output text
+		this.OUTPUT_SMALL_TEXT_STYLE = {
+			fontSize: "1em",
+			paddingTop: 50,
+			height: 50,
+		}
+
+		// Set inital state
 		this.state = {
 			output: "0",
 			storedOutput: null,
 			operator: null,
+			outputStyle: {}
 		};
 	}
 
-	componentDidUpdate() {
-		// Handle smaller number size.
+	/**
+	 * Sets the output of the string. Handles comma seperation.
+	 * 
+	 * @param {string} output - output of the string
+	 */
+	setOutput(output) {
+		let outputParts = output.split(".");
+
+		outputParts[0] = parseInt(outputParts[0]).toLocaleString();
+
+		if(outputParts[1] != null) {
+
+			if(outputParts[1].length > 8)  {
+				let eightSigFigs = parseFloat("0." + outputParts[1]).toFixed(8);
+
+				outputParts[1] = eightSigFigs.toString().split(".")[1];
+			}
+
+		}
+
+		return outputParts.join(".");
 	}
 
+	/**
+	 * Gets the output from state. Handles commas.
+	 */
+	getOutput() {
+		let input = this.state.output;
+
+		let inputParts = input.split(",");
+
+		let inputNoCommas = inputParts.join("");
+
+		return inputNoCommas;
+	}
+
+	/**
+	 * Handles text-resizing after MAX_OUTPUT_LENGTH character size.
+	 */
+	handleOutputTextSize() {
+
+		if(this.state.output.length > this.RESIZE_OUTPUT_LENGTH) {
+			if(Object.keys(this.state.outputStyle).length < 1) {
+				this.setState({
+					outputStyle: this.OUTPUT_SMALL_TEXT_STYLE
+				});
+			}
+		}
+
+		else {
+			if(this.state.outputStyle.length > 1) {
+				this.setState({
+					outputStyle: {}
+				});
+			}
+		}
+
+	}
+
+	/**
+	 * Runs after the state has been updated.
+	 */
+	componentDidUpdate() {
+
+		// Changes text-size based on output length
+		this.handleOutputTextSize();
+	}
+
+	/**
+	 * Clear the output and reset all internal variables.
+	 */
 	resetCalculatorState() {
 		this.setState({
 			output: "0",
@@ -41,10 +122,13 @@ class App extends Component {
 
 	/**
 	 * Appends a character to the output.
+	 * 
 	 * @param input {String} - The input to be appended.
 	 */
 	inputButton  = (input) => {
-		let newValue = this.state.output + input;
+
+		let myOutput = this.getOutput();
+		let newValue = myOutput + input;
 
 		// Number of characters in output cannot exceed MAX_OUTPUT_LENGTH
 		if(this.state.output.length >= this.MAX_OUTPUT_LENGTH)
@@ -66,16 +150,25 @@ class App extends Component {
 
 		// Update the render
 		this.setState({
-			output: newValue
+			output: this.setOutput(newValue)
 		});
 	}
 
+	/**
+	 * Clears calculator state
+	 */
 	clearButton  = () => {
 		this.resetCalculatorState();
 	}
 
+	/**
+	 * Clicking on the +, -, *, /, % or +/- buttons
+	 * 
+	 * @param action {String} - Action button ID.
+	 * 
+	 */
 	actionButton  = (action) => {
-		var oldOutput = this.state.output;
+		var oldOutput = this.getOutput(this.state.output);
 
 		this.setState({
 			storedOutput: oldOutput,
@@ -85,12 +178,18 @@ class App extends Component {
 		});
 	}
 
+	/**
+	 * Actions which only modify the content currently in the output.
+	 * 
+	 * @param outputChanger {String} - change action.
+	 * 
+	 */
 	changeButton = (outputChanger) => {
 
 		// Negate turns the current output negative
 		if(outputChanger == "negate") {
 			this.setState({
-				output: (parseInt(this.state.output) * -1).toString()
+				output: this.setState( (parseInt( this.getOutput() ) * -1).toString() )
 			})
 		}
 
@@ -98,11 +197,13 @@ class App extends Component {
 		else if(outputChanger == "percent") {
 			if(this.state.storedOutput != null) {
 
-				let numOutput = parseFloat(this.state.output),
+				let numOutput = parseFloat( this.getOutput() ),
 					numStoredOutput = parseFloat(this.state.storedOutput);
 
+				let calculatedResult = ((numOutput * 0.01) * numStoredOutput)
+
 				this.setState({
-					output: ((numOutput * 0.01) * numStoredOutput).toString()
+					output: this.setOutput( calculatedResult.toString() )
 				})
 
 			} else {
@@ -111,30 +212,36 @@ class App extends Component {
 		}
 	}
 
+	/**
+	 * Calculate the outcome based on stored input variables.
+	 */
 	equalButton = () => {
 		let calculatedValue = 0;
 
 		// Calculation
 		if(this.state.storedOutput != null && this.state.operator != null) {
 			if(this.state.operator == "+") {
-				calculatedValue = parseFloat(this.state.storedOutput) + parseFloat(this.state.output);
+				calculatedValue = parseFloat(this.state.storedOutput) + parseFloat(this.getOutput());
 			} else if(this.state.operator == "-") {
-				calculatedValue = parseFloat(this.state.storedOutput) - parseFloat(this.state.output);
+				calculatedValue = parseFloat(this.state.storedOutput) - parseFloat(this.getOutput());
 			} else if(this.state.operator == "*") {
-				calculatedValue = parseFloat(this.state.storedOutput) * parseFloat(this.state.output);
+				calculatedValue = parseFloat(this.state.storedOutput) * parseFloat(this.getOutput());
 			} else if(this.state.operator == "/") {
-				calculatedValue = parseFloat(this.state.storedOutput) / parseFloat(this.state.output);
+				calculatedValue = parseFloat(this.state.storedOutput) / parseFloat(this.getOutput());
 			} 
 		}
 
 		// Update state
 		this.setState({
-			output: calculatedValue.toString(),
+			output: this.setOutput( calculatedValue.toString() ),
 			operator: null,
 			equalHitLast: true
 		})
 	}
 
+	/**
+	 * Render the view.
+	 */
 	render() {
 		return (
 			<div className="App">
@@ -145,7 +252,7 @@ class App extends Component {
 						</h1>
 					</div>
 					<div className="calculator">
-						<div className="calculator-output">
+						<div className="calculator-output" style={this.state.outputStyle}>
 							{this.state.output}
 						</div>
 
