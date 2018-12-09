@@ -37,7 +37,8 @@ class App extends Component {
             output: "0",
             storedOutput: null,
             operator: null,
-            outputStyle: {}
+            outputStyle: {},
+            previousHighlight: null
         };
     }
 
@@ -91,7 +92,7 @@ class App extends Component {
         }
 
         else {
-            if(this.state.outputStyle.length > 1) {
+            if(Object.keys(this.state.outputStyle).length > 0) {
                 this.setState({
                     outputStyle: {}
                 });
@@ -162,12 +163,46 @@ class App extends Component {
     }
 
     /**
+     * Removes the highlighted button
+     */
+    removeHighlightButton  = () => {
+
+        if(this.state.previousHighlight != null)
+            this.state.previousHighlight.classList.remove("highlighted-btn");
+
+        this.setState({
+            previousHighlight: null
+        });
+    }
+
+    /**
+     * Removes highlighted button and highlihgts new button
+     * 
+     * @param targetedElement {DOMEvent} - Clicked DOM node
+     */
+    highlightButton  = (targetedElement) => {
+
+        if(this.state.previousHighlight != null)
+            this.state.previousHighlight.classList.remove("highlighted-btn");
+
+        this.setState({
+            previousHighlight: targetedElement
+        });
+
+        targetedElement.classList.add("highlighted-btn");
+    }
+
+    /**
      * Clicking on the +, -, *, /, % or +/- buttons
      * 
      * @param action {String} - Action button ID.
      * 
      */
-    actionButton  = (action) => {
+    actionButton  = (action, event) => {
+
+        if(event != null)
+        this.highlightButton(event.currentTarget);
+
         var oldOutput = this.getOutput(this.state.output);
 
         this.setState({
@@ -184,12 +219,15 @@ class App extends Component {
      * @param outputChanger {String} - change action.
      * 
      */
-    changeButton = (outputChanger) => {
+    changeButton = (outputChanger, event) => {
+
+        if(event != null)
+        this.highlightButton(event.currentTarget);
 
         // Negate turns the current output negative
         if(outputChanger == "negate") {
             this.setState({
-                output: this.setState( (parseInt( this.getOutput() ) * -1).toString() )
+                output: this.setOutput( (parseInt( this.getOutput() ) * -1).toString() )
             })
         }
 
@@ -237,6 +275,8 @@ class App extends Component {
             operator: null,
             equalHitLast: true
         })
+
+        this.removeHighlightButton();
     }
 
     /**
@@ -260,22 +300,22 @@ class App extends Component {
                             <div className="calculator-button C-button" onClick={this.clearButton}>C</div>
                             <div className="calculator-button negate-button funct-btn" onClick={() => this.changeButton("negate")}>+/-</div>
                             <div className="calculator-button percent-button funct-btn" onClick={() => this.changeButton("percent")}>%</div>
-                            <div className="calculator-button divide-button funct-btn" onClick={() => this.actionButton("/")}>/</div>
+                            <div className="calculator-button divide-button funct-btn" onClick={(event) => this.actionButton("/", event)}>/</div>
 
                             <div className="calculator-button seven-button number-btn" onClick={() => this.inputButton("7")}>7</div>
                             <div className="calculator-button eight-button number-btn" onClick={() => this.inputButton("8")}>8</div>
                             <div className="calculator-button nine-button number-btn" onClick={() => this.inputButton("9")}>9</div>
-                            <div className="calculator-button multiply-button funct-btn" onClick={() => this.actionButton("*")}>X</div>
+                            <div className="calculator-button multiply-button funct-btn" onClick={(event) => this.actionButton("*", event)}>X</div>
 
                             <div className="calculator-button four-button number-btn" onClick={() => this.inputButton("4")}>4</div>
                             <div className="calculator-button five-button number-btn" onClick={() => this.inputButton("5")}>5</div>
                             <div className="calculator-button six-button number-btn" onClick={() => this.inputButton("6")}>6</div>
-                            <div className="calculator-button minus-button funct-btn" onClick={() => this.actionButton("-")}>-</div>
+                            <div className="calculator-button minus-button funct-btn" onClick={(event) => this.actionButton("-", event)}>-</div>
 
                             <div className="calculator-button one-button number-btn" onClick={() => this.inputButton("1")}>1</div>
                             <div className="calculator-button two-button number-btn" onClick={() => this.inputButton("2")}>2</div>
                             <div className="calculator-button three-button number-btn" onClick={() => this.inputButton("3")}>3</div>
-                            <div className="calculator-button plus-button funct-btn" onClick={() => this.actionButton("+")}>+</div>
+                            <div className="calculator-button plus-button funct-btn" onClick={(event) => this.actionButton("+", event)}>+</div>
 
                             <div className="calculator-button zero-button number-btn" onClick={() => this.inputButton("0")}>0</div>
                             <div className="calculator-button point-button number-btn" onClick={() => this.inputButton(".")}>.</div>
